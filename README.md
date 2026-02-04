@@ -75,6 +75,9 @@ Object types:
 - `user`: requires `data.name`, `data.username`
 - `post`: requires `data.authorId`, `data.body`
 - `page`: requires `data.title`
+- `checkin`: requires `data.userId`, `data.placeId`, `data.caption` (optional)
+- `place`: requires `data.name`, `data.city` (optional)
+- `comment`: requires `data.authorId`, `data.body`
 
 ### Associations
 - `POST /associations`
@@ -85,12 +88,16 @@ Object types:
 - `GET /associations/count`
 
 Association types:
-- `friend`, `like`, `follow`
+- `friend`, `like`, `follow`, `authored`, `tagged_in`, `located_at`, `has_comment`
 
 Optional data fields:
 - `friend`: `note`
 - `like`: `reaction`
 - `follow`: `note`
+- `authored`: `role`
+- `tagged_in`: `context`
+- `located_at`: `precision`
+- `has_comment`: `note`
 
 ### Cursor‑Based Listing
 
