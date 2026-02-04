@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./database');
+const redis = require('./redis');
 const app = express();
 
 app.use(express.json());
@@ -62,6 +63,9 @@ app.post('/associations', async (req, res) => {
       [sourceId, destinationId, associationType, JSON.stringify(data || {})]
     );
 
+    // Invalidate cache
+    await redis.del(`assoc:${sourceId}:${associationType}`);
+
     res.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -81,18 +85,34 @@ app.get('/associations', async (req, res) => {
     return res.status(400).json({ error: 'Missing sourceId or type' });
   }
 
+  const cacheKey = `assoc:${sourceId}:${type}`;
+
   try {
+    // 1️⃣ Try cache
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      const list = JSON.parse(cached);
+      return res.json(list.slice(0, Number(limit)));
+    }
+
+    // 2️⃣ Cache miss → DB
     const [rows] = await db.execute(
       `SELECT destination_id, data, created_at
        FROM associations
        WHERE source_id = ?
          AND association_type = ?
        ORDER BY created_at DESC
-       LIMIT ?`,
-      [sourceId, type, Number(limit)]
+       LIMIT 1000`,
+      [sourceId, type]
     );
 
-    res.json(rows);
+    // 3️⃣ Populate cache
+    await redis.set(cacheKey, JSON.stringify(rows), {
+      EX: 3600 // Cache for 1 hour (optional, but good practice)
+    });
+
+    // 4️⃣ Return slice
+    res.json(rows.slice(0, Number(limit)));
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
