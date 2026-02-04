@@ -9,6 +9,30 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:3000"
+    },
+    {
+      "key": "aliceId",
+      "value": ""
+    },
+    {
+      "key": "bobId",
+      "value": ""
+    },
+    {
+      "key": "cathyId",
+      "value": ""
+    },
+    {
+      "key": "placeId",
+      "value": ""
+    },
+    {
+      "key": "checkinId",
+      "value": ""
+    },
+    {
+      "key": "commentId",
+      "value": ""
     }
   ],
   "item": [
@@ -20,6 +44,326 @@
           "request": {
             "method": "GET",
             "url": "{{baseUrl}}/healthz"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow - Alice Check-in at GG Bridge",
+      "item": [
+        {
+          "name": "Create Alice (user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('aliceId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"user\",\n  \"data\": {\n    \"name\": \"Alice\",\n    \"username\": \"alice\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "Create Bob (user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('bobId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"user\",\n  \"data\": {\n    \"name\": \"Bob\",\n    \"username\": \"bob\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "Create Cathy (user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('cathyId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"user\",\n  \"data\": {\n    \"name\": \"Cathy\",\n    \"username\": \"cathy\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "Create Place (GG Bridge)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('placeId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"place\",\n  \"data\": {\n    \"name\": \"Golden Gate Bridge\",\n    \"city\": \"San Francisco\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "Create Check-in",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('checkinId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"checkin\",\n  \"data\": {\n    \"userId\": {{aliceId}},\n    \"placeId\": {{placeId}},\n    \"caption\": \"At GG Bridge\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "Create Comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('commentId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"comment\",\n  \"data\": {\n    \"authorId\": {{cathyId}},\n    \"body\": \"So cool!\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "Friend (Alice -> Bob)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{aliceId}},\n  \"destinationId\": {{bobId}},\n  \"associationType\": \"friend\",\n  \"data\": {\n    \"note\": \"friends\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "Friend (Bob -> Alice)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{bobId}},\n  \"destinationId\": {{aliceId}},\n  \"associationType\": \"friend\",\n  \"data\": {\n    \"note\": \"friends\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "Authored (Alice -> Check-in)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{aliceId}},\n  \"destinationId\": {{checkinId}},\n  \"associationType\": \"authored\"\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "Tagged In (Bob -> Check-in)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{bobId}},\n  \"destinationId\": {{checkinId}},\n  \"associationType\": \"tagged_in\"\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "Located At (Check-in -> Place)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{checkinId}},\n  \"destinationId\": {{placeId}},\n  \"associationType\": \"located_at\"\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "Has Comment (Check-in -> Comment)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{checkinId}},\n  \"destinationId\": {{commentId}},\n  \"associationType\": \"has_comment\"\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "Authored (Cathy -> Comment)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": {{cathyId}},\n  \"destinationId\": {{commentId}},\n  \"associationType\": \"authored\"\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "List Alice Authored",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations?sourceId={{aliceId}}&type=authored&limit=20"
+          }
+        },
+        {
+          "name": "List Check-in Located At",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations?sourceId={{checkinId}}&type=located_at&limit=20"
+          }
+        },
+        {
+          "name": "List Check-in Comments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations?sourceId={{checkinId}}&type=has_comment&limit=20"
+          }
+        },
+        {
+          "name": "List Bob Tagged In",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations?sourceId={{bobId}}&type=tagged_in&limit=20"
           }
         }
       ]
