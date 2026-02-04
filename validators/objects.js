@@ -42,6 +42,36 @@ function validateObjectData(objectType, data) {
     }
   }
 
+  if (objectType === 'checkin') {
+    if (!Number.isInteger(payload.userId) || payload.userId <= 0) {
+      throw new HttpError(400, 'Missing or invalid data.userId');
+    }
+    if (!Number.isInteger(payload.placeId) || payload.placeId <= 0) {
+      throw new HttpError(400, 'Missing or invalid data.placeId');
+    }
+    if (payload.caption !== undefined && typeof payload.caption !== 'string') {
+      throw new HttpError(400, 'Invalid data.caption');
+    }
+  }
+
+  if (objectType === 'place') {    
+    if (typeof payload.name !== 'string' || payload.name.trim() === '') {
+      throw new HttpError(400, 'Missing or invalid data.name');
+    }
+    if (payload.city !== undefined && typeof payload.city !== 'string') {
+      throw new HttpError(400, 'Invalid data.city');
+    }
+  }
+
+  if (objectType === 'comment') {
+    if (!Number.isInteger(payload.authorId) || payload.authorId <= 0) {
+      throw new HttpError(400, 'Missing or invalid data.authorId');
+    }
+    if (typeof payload.body !== 'string' || payload.body.trim() === '') {
+      throw new HttpError(400, 'Missing or invalid data.body');
+    }
+  }
+
   return payload;
 }
 

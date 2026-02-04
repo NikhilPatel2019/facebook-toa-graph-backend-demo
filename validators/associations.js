@@ -40,6 +40,30 @@ function validateAssociationData(associationType, data) {
     }
   }
 
+  if (associationType === 'authored') {
+    if (payload.role !== undefined && typeof payload.role !== 'string') {
+      throw new HttpError(400, 'Invalid data.role');
+    }
+  }
+
+  if (associationType === 'tagged_in') {
+    if (payload.context !== undefined && typeof payload.context !== 'string') {
+      throw new HttpError(400, 'Invalid data.context');
+    }
+  }
+
+  if (associationType === 'located_at') {
+    if (payload.precision !== undefined && typeof payload.precision !== 'string') {
+      throw new HttpError(400, 'Invalid data.precision');
+    }
+  }
+
+  if (associationType === 'has_comment') {
+    if (payload.note !== undefined && typeof payload.note !== 'string') {
+      throw new HttpError(400, 'Invalid data.note');
+    }
+  }
+
   return payload;
 }
 
