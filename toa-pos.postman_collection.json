@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "toa-pos",
+    "_postman_id": "b6b5e9d9-6d2d-4f59-b1d9-3f3c2b1e1a6a",
+    "description": "Postman collection for toa-pos APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /healthz",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/healthz"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Objects",
+      "item": [
+        {
+          "name": "POST /objects (user)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"user\",\n  \"data\": {\n    \"name\": \"Ada Lovelace\",\n    \"username\": \"ada\",\n    \"bio\": \"First programmer\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "POST /objects (page)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"page\",\n  \"data\": {\n    \"title\": \"Open Graph Labs\",\n    \"category\": \"Technology\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "POST /objects (post)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectType\": \"post\",\n  \"data\": {\n    \"authorId\": 1,\n    \"body\": \"Hello from TAO\",\n    \"visibility\": \"public\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects"
+          }
+        },
+        {
+          "name": "GET /objects/:id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/objects/1"
+          }
+        },
+        {
+          "name": "PUT /objects/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"name\": \"Ada Lovelace\",\n    \"username\": \"ada\",\n    \"bio\": \"Updated bio\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/objects/1"
+          }
+        },
+        {
+          "name": "DELETE /objects/:id",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/objects/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Associations",
+      "item": [
+        {
+          "name": "POST /associations (friend)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": 1,\n  \"destinationId\": 2,\n  \"associationType\": \"friend\",\n  \"data\": {\n    \"note\": \"College friend\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "POST /associations (like)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": 1,\n  \"destinationId\": 3,\n  \"associationType\": \"like\",\n  \"data\": {\n    \"reaction\": \"love\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "GET /associations (list)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations?sourceId=1&type=friend&limit=20"
+          }
+        },
+        {
+          "name": "GET /associations/:sourceId/:type/:destinationId",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations/1/friend/2"
+          }
+        },
+        {
+          "name": "GET /associations/count",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/associations/count?sourceId=1&type=friend"
+          }
+        },
+        {
+          "name": "PUT /associations",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": 1,\n  \"destinationId\": 2,\n  \"associationType\": \"friend\",\n  \"data\": {\n    \"note\": \"Best friend\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        },
+        {
+          "name": "DELETE /associations",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceId\": 1,\n  \"destinationId\": 2,\n  \"associationType\": \"friend\"\n}"
+            },
+            "url": "{{baseUrl}}/associations"
+          }
+        }
+      ]
+    }
+  ]
+}
