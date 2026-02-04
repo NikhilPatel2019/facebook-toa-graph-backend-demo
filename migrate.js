@@ -27,10 +27,26 @@ async function migrate() {
         data JSON,
         status TINYINT DEFAULT 1,
         PRIMARY KEY (source_id, association_type, destination_id),
-        INDEX idx_assoc_query (source_id, association_type, created_at)
+        INDEX idx_assoc_query (source_id, association_type, created_at, destination_id)
       )
     `);
     console.log('Table "associations" ensured.');
+
+    const [indexRows] = await connection.query(
+      `SELECT 1
+       FROM information_schema.STATISTICS
+       WHERE TABLE_SCHEMA = ?
+         AND TABLE_NAME = 'associations'
+         AND INDEX_NAME = 'idx_assoc_query'
+       LIMIT 1`,
+      [process.env.DB_NAME]
+    );
+    if (indexRows.length === 0) {
+      await connection.query(
+        'CREATE INDEX idx_assoc_query ON associations (source_id, association_type, created_at, destination_id)'
+      );
+      console.log('Index "idx_assoc_query" created.');
+    }
 
     connection.release();
     process.exit(0);
